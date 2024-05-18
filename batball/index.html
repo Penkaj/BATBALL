@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Bat Ball Stump Game</h1>
+
+  <button class="choose-button" onclick="
+      
+    let result=choice();
+    let result_msg=resultmain('Bat',result);
+    print('Bat' ,result , result_msg);
+
+  ">
+  <img src="images/bat.png" class="choice-image">
+  </button>
+    
+  <button class="choose-button" onclick="
+    result=choice();
+    result_msg=resultmain('Ball',result);
+    print('Ball' ,result , result_msg);
+
+  ">
+    <img src="images/ball.png" class="choice-image">
+  </button>
+
+
+  <button class="choose-button" onclick="
+      
+    result=choice();
+    result_msg=resultmain('Stump',result);
+    print('Stump' ,result , result_msg);
+  
+
+  ">
+      <img src="images/stump.png" class="choice-image">
+  </button>
+
+
+  <h3 id="user-move" class="h"></h3>
+  <h3 id="computer-move" class="h"></h3>
+  <h3 id="result" class="h"></h3>
+  <h3 id="score" class="h"></h3>
+
+  <button id="result" onclick="localStorage.clear(); 
+  resetscore(); 
+    document.querySelector('#user-move').innerText=``;
+    document.querySelector('#computer-move').innerText=``;
+    document.querySelector('#result').innerText=``;
+    document.querySelector('#score').innerText=`Score: Win:0, Loss:0, Tie:0`">
+    reset
+  </button>
+
+  <script>
+
+    //using concept of object to store win loss and tie;
+    let scorestr=localStorage.getItem('Score'); // get item from the local storage
+    let score;
+    resetscore(scorestr);
+    function resetscore(scorestr){
+      score = scorestr ? JSON.parse(scorestr) : {
+      win:0,
+      loss:0,
+      tie:0,
+    };
+    score.display= function(){
+      return `Score:: Won:${score.win}, Lost: ${score.loss} , Tie: ${score.tie}`;
+    };
+    }
+
+    // let score = JSON.parse(scorestr) || {
+    //   win:0,
+    //   loss:0,
+    //   tie:0,
+    // };
+    // let score={
+    //   win:0,
+    //   loss:0,
+    //   tie:0,
+    // display:function(){
+    //   return `No of matches won: ${score.win}, lost: ${score.loss} , tie: ${score.tie}`;
+    // }
+      
+    // }; 
+
+    function choice(){
+        let comp_choice = Math.random()*3;
+        if(comp_choice >=0 && comp_choice <=1){
+          return 'Bat';
+        }
+        else if(comp_choice>1 && comp_choice<=2){
+          return 'Ball';
+        }
+        else{
+          return 'Stump';
+        }
+    }
+
+    function resultmain(userMove, computerMove){
+      if(userMove==='Bat'){
+        if(computerMove==='Ball'){
+          score.win++;     // storing win value;
+          return 'User won'
+        }
+        else if(computerMove==='Bat'){
+          score.tie++;
+          return 'Its a tie';
+        }
+        else if(computerMove==='Stump'){
+          score.loss++;
+          return 'Computer won';
+        }
+      }
+
+      else if(userMove==='Ball'){
+        if(computerMove==='Ball'){
+          score.tie++;
+          return 'Its a tie'
+        }
+        else if(computerMove==='Bat'){
+          score.loss++;
+          return 'Computer Won';
+        }
+        else{
+          score.win++; 
+          return 'User Won';
+        }
+      }
+      else{
+        if(computerMove==='Stump'){
+          score.tie++;
+          return 'Its a tie'
+        }
+        else if(computerMove==='Ball'){
+          score.loss++;
+          return 'Computer Won';
+        }
+        else{
+          score.win++; 
+          return 'User Won';
+        }
+      }
+    }
+
+    function print(userchoice ,result , result_msg){
+
+      //using local storage to store win loss tie value
+
+      localStorage.setItem('Score' , JSON.stringify(score));
+
+
+      document.querySelector('#user-move').innerText=`You have choosen ${userchoice}`;
+      document.querySelector('#computer-move').innerText=`Computer choice is ${result}`;
+      document.querySelector('#result').innerText=`${result_msg}`;
+      document.querySelector('#score').innerText=`${score.display()}`;
+      // alert(`Your choice is ${userchoice} and computer choice is ${result}
+      //   ${result_msg}
+
+      //   ${score.display()}
+      //   `
+      // );
+    }
+  </script>
+
+</body>
+</html>
